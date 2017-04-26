@@ -66,6 +66,8 @@ public:
     
     virtual std::vector<DocumentObject*> addObjects(std::vector<DocumentObject*> obj) override;
 
+    virtual std::vector<DocumentObject*> getStaticObjects() const;
+
 protected:
     /// Checks integrity of the Origin
     virtual App::DocumentObjectExecReturn *extensionExecute () override;

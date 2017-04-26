@@ -49,12 +49,15 @@ GroupExtension::~GroupExtension()
 {
 }
 
-DocumentObject* GroupExtension::addObject(const char* sType, const char* pObjectName)
+DocumentObject* GroupExtension::newObject(const char* sType, const char* pObjectName)
 {
     DocumentObject* obj = getExtendedObject()->getDocument()->addObject(sType, pObjectName);
     if(!allowObject(obj)) {
         getExtendedObject()->getDocument()->remObject(obj->getNameInDocument());
-        return nullptr;
+        std::stringstream msg;
+        msg << "Object " << this->getExtendedObject()->getNameInDocument()
+            << " cannot accept a new object of type " << sType;
+        throw Base::TypeError(msg.str());
     }
     if (obj) addObject(obj);
     return obj;
@@ -102,6 +105,30 @@ std::vector< DocumentObject* > GroupExtension::addObjects(std::vector< DocumentO
     Group.setValues(grp);
     
     return added;
+}
+
+bool GroupExtension::adoptObject(DocumentObject* obj)
+{
+    auto *group = App::GroupExtension::getGroupOfObject(obj);
+    if (group == getExtendedObject()){
+        return true;
+    } else if (group){
+        return false;
+    } else {
+        addObject(obj);
+        return true;
+    }
+}
+
+bool GroupExtension::allowObject(DocumentObject* obj)
+{
+    return allowObject(obj->getTypeId().getName(), "");
+}
+
+bool GroupExtension::allowObject(const char* type, const char* /*pytype*/)
+{
+    Base::Type t = Base::Type::fromName(type);
+    return t.isDerivedFrom(DocumentObject::getClassTypeId());
 }
 
 std::vector<DocumentObject*> GroupExtension::removeObject(DocumentObject* obj)
@@ -202,6 +229,19 @@ bool GroupExtension::isChildOf(const GroupExtension* group) const
 
 std::vector<DocumentObject*> GroupExtension::getObjects() const
 {
+    auto result = getDynamicObjects();
+    auto staticobjects = getStaticObjects();
+    result.insert(result.end(), staticobjects.begin(), staticobjects.end());
+    return result;
+}
+
+std::vector<DocumentObject*> GroupExtension::getStaticObjects() const
+{
+    return std::vector<DocumentObject*>();
+}
+
+std::vector<DocumentObject*> GroupExtension::getDynamicObjects() const
+{
     return Group.getValues();
 }
 
@@ -293,4 +333,6 @@ EXTENSION_PROPERTY_SOURCE_TEMPLATE(App::GroupExtensionPython, App::GroupExtensio
 
 // explicit template instantiation
 template class AppExport ExtensionPythonT<GroupExtensionPythonT<GroupExtension>>;
+
+
 }

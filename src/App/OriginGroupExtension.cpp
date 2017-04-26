@@ -192,6 +192,14 @@ std::vector< DocumentObject* > OriginGroupExtension::addObjects(std::vector<Docu
     return App::GeoFeatureGroupExtension::addObjects(objs);
 }
 
+std::vector<DocumentObject*> OriginGroupExtension::getStaticObjects() const
+{
+    if (Origin.getValue())
+        return std::vector<DocumentObject*>({Origin.getValue()});
+    else
+        return std::vector<DocumentObject*>();
+}
+
 
 // Python feature ---------------------------------------------------------
 
