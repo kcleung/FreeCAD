@@ -342,7 +342,7 @@ Container::~Container()
 //--------------------------Py methods---------------------------
 
 PyMethodDef Container::PyMethods[] = {
-    {"isAContainer",       (PyCFunction) Container::sIsAConainer,       1,
+    {"isAContainer",       (PyCFunction) Container::sIsAContainer,       1,
      "isAContainer(object): tests if given object is recognized as being a container."},
     {"findAllContainers",       (PyCFunction) Container::sFindAllContainers,       1,
      "findAllContainers(document): returns all objects from given document that are containers (both direct children and nested ones).\n"
@@ -359,7 +359,7 @@ PyMethodDef Container::PyMethods[] = {
 };
 
 
-PyObject* Container::sIsAConainer(PyObject* /*self*/, PyObject* args, PyObject* /*kwd*/)
+PyObject* Container::sIsAContainer(PyObject* /*self*/, PyObject* args, PyObject* /*kwd*/)
 {
     PyObject* obj = nullptr;
     if (!PyArg_ParseTuple(args, "O!", &(PropertyContainerPy::Type), &obj))

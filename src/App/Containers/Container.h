@@ -104,7 +104,7 @@ public:
 public:
     static PyMethodDef    PyMethods[]; //static methods
 private:
-    static PyObject* sIsAConainer(PyObject *self,PyObject *args,PyObject *kwd);
+    static PyObject* sIsAContainer(PyObject *self,PyObject *args,PyObject *kwd);
     static PyObject* sFindAllContainers(PyObject *self,PyObject *args,PyObject *kwd);
     static PyObject* sGetContainersOf(PyObject *self,PyObject *args,PyObject *kwd);
     static PyObject* sGetContainerOf(PyObject *self,PyObject *args,PyObject *kwd);
