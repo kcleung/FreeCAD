@@ -60,7 +60,20 @@ std::vector<DocumentObject*> Container::dynamicChildren() const
 
         std::copy(resultset.begin(), resultset.end(), std::back_inserter(result));
     } else if (isAGroup()) {
-        result = asGroup().getDynamicObjects();
+        std::set<DocumentObject*> resultset;
+        auto allObjects = asGroup().getDynamicObjects();
+	resultset.insert(allObjects.begin(), allObjects.end());
+
+	for (DocumentObject* cnt: allObjects) {
+            if (cnt->hasExtension(GroupExtension::getExtensionClassTypeId())) {
+                for (DocumentObject *child: Container(cnt).allChildren()) {
+                    resultset.erase(child);
+                }
+            }
+	}
+
+        std::copy(resultset.begin(), resultset.end(), std::back_inserter(result));
+
     } else if (isAnOrigin()) {
         //no dynamic children
     } else {
