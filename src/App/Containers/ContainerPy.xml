@@ -26,11 +26,6 @@ Container(document): creates a container interface around a document.
 Constructor is cheap, so constructing container interfaces around objects on the fly as 
 needed is all right.
 
-Attributes:
-Apart from built-in attributes and methods, child objects can be accessed as attributes of 
-Container object. E.g. 'Container(App.ActiveDocument).Part' is the same as 
-'App.ActiveDocument.Part', if Part is at the root of Document.
-
 Examples of use:
 Container(App.ActiveDocument).AllChildren - returns list of objects in document root (i.e. 
    not contained by any container object)
