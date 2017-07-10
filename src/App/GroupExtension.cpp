@@ -52,7 +52,7 @@ GroupExtension::~GroupExtension()
 DocumentObject* GroupExtension::newObject(const char* sType, const char* pObjectName)
 {
     DocumentObject* obj = getExtendedObject()->getDocument()->newObject(sType, pObjectName);
-    if(!allowObject(obj)) {
+    if(!canAccept(obj)) {
         getExtendedObject()->getDocument()->remObject(obj->getNameInDocument());
         std::stringstream msg;
         msg << "Object " << this->getExtendedObject()->getNameInDocument()
@@ -75,7 +75,7 @@ std::vector< DocumentObject* > GroupExtension::addObjects(std::vector< DocumentO
     std::vector<DocumentObject*> grp = Group.getValues();
     for(auto obj : objs) {
             
-        if(!allowObject(obj))
+        if(!canAccept(obj))
             continue;
         
         if (hasObject(obj))
@@ -121,15 +121,25 @@ bool GroupExtension::adoptObject(DocumentObject* obj)
     }
 }
 
-bool GroupExtension::allowObject(DocumentObject* obj)
+bool GroupExtension::canAccept(DocumentObject* obj)
 {
-    return allowObject(obj->getTypeId().getName(), "");
+    return canCreate(obj->getTypeId().getName(), "");
 }
 
-bool GroupExtension::allowObject(const char* type, const char* /*pytype*/)
+bool GroupExtension::canCreate(const char* type, const char* /*pytype*/)
 {
     Base::Type t = Base::Type::fromName(type);
     return t.isDerivedFrom(DocumentObject::getClassTypeId());
+}
+
+bool GroupExtension::allowObject(DocumentObject *obj)
+{
+    return canAccept(obj);
+}
+
+bool GroupExtension::allowObject(const char* type, const char* pytype)
+{
+    return canCreate(type, pytype);
 }
 
 std::vector<DocumentObject*> GroupExtension::removeObject(DocumentObject* obj)

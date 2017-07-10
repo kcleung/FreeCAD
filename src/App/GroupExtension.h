@@ -68,11 +68,22 @@ public:
     /*override this function if you want only special objects
      */
     /**
-     * @brief allowObject(object): tests if given object can be added to this group
+     * @brief canAccept(object): tests if the given object can be accepted by this group.
+     */
+    virtual bool canAccept(DocumentObject* obj);
+    /**
+     * @brief allowObject(object): (deprecated) the call is redirected to GroupExtension::canAccept(DocumentObject* obj).
      */
     virtual bool allowObject(DocumentObject* obj);
     /**
-     * @brief allowObject(type, pytype): tests if an object of given type can be created in/added to this group.
+     * @brief canCreate(type, pytype): tests if an object of the given type can be created in this group.
+     * @param type: c++ type name, e.g. "Part::Primitive"
+     * @param pytype: python type (free-form)
+     * @return
+     */
+    virtual bool canCreate(const char* type, const char* pytype = "");
+    /**
+     * @brief allowObject(type, pytype): (deprecated) the call is redirected to GroupExtension::canCreate(const char* type, const char* pytype = "").
      * @param type: c++ type name, e.g. "Part::Primitive"
      * @param pytype: python type (free-form)
      * @return
@@ -142,28 +153,34 @@ public:
     
     GroupExtensionPythonT() {}
     virtual ~GroupExtensionPythonT() {}
- 
+
     //override the documentobjectextension functions to make them available in python 
-    virtual bool allowObject(DocumentObject* obj) override {
+    virtual bool canAccept(DocumentObject* obj) override {
         Py::Object pyobj = Py::asObject(obj->getPyObject());
-        EXTENSION_PROXY_ONEARG(allowObject, pyobj);
+        EXTENSION_PROXY_ONEARG(canAccept, pyobj);
                 
         if(result.isNone())
-            return ExtensionT::allowObject(obj);
+            return ExtensionT::canAccept(obj);
         
         if(result.isBoolean())
             return result.isTrue();
         
         return false;
     };
-    virtual bool allowObject(const char* type, const char* pytype) override {
+
+
+    virtual bool allowObject(DocumentObject* obj) override {
+        return canAccept(obj);
+    };
+
+    virtual bool canCreate(const char* type, const char* pytype) override {
         Py::String arg0(type);
         Py::String arg1(pytype ? pytype : "");
-        EXTENSION_PROXY_FIRST(allowObject)
+        EXTENSION_PROXY_FIRST(canCreate)
         Py::Tuple args(2);
         args.setItem(0, arg0);
         args.setItem(0, arg1);
-        EXTENSION_PROXY_SECOND(allowObject)
+        EXTENSION_PROXY_SECOND(canCreate)
         Py::Tuple args(3);
         args.setItem(0, Py::Object(this->getExtensionPyObject(), true));
         args.setItem(1, arg0);
@@ -171,13 +188,19 @@ public:
         EXTENSION_PROXY_THIRD()
 
         if(result.isNone())
-            return ExtensionT::allowObject(type, pytype);
+            return ExtensionT::canCreate(type, pytype);
 
         if(result.isBoolean())
             return result.isTrue();
 
         return false;
     };
+
+
+    virtual bool allowObject(const char* type, const char* pytype) override {
+        return canCreate(type, pytype);
+    };
+
 };
 
 typedef ExtensionPythonT<GroupExtensionPythonT<GroupExtension>> GroupExtensionPython;

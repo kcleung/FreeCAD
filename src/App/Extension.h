@@ -197,10 +197,10 @@ template<> void _class_::init(void){\
  *
  *   virtual bool overridableMethod(DocumentObject* obj)  override {
  *       Py::Object pyobj = Py::asObject(obj->getPyObject());
- *       EXTENSION_PROXY_ONEARG(allowObject, pyobj);
+ *       EXTENSION_PROXY_ONEARG(canAccept, pyobj);
  *               
  *       if(result.isNone())
- *           ExtensionT::allowObject(obj);
+ *           ExtensionT::canAccept(obj);
  *       
  *       if(result.isBoolean())
  *           return result.isTrue();

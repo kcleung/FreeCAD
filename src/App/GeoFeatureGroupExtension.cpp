@@ -126,7 +126,7 @@ std::vector<DocumentObject*> GeoFeatureGroupExtension::addObjects(std::vector<Ap
     
     for(auto object : objects) {
         
-        if(!allowObject(object))
+        if(!canAccept(object))
             continue;
         
         //cross CoordinateSystem links are not allowed, so we need to move the whole link group 

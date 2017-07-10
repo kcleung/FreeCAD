@@ -55,13 +55,13 @@ public:
      */
     virtual bool canAccept(DocumentObject* obj, bool b_throw = false) const;
     /**
-     * @brief canAccept(type, pytype): tests if a new object of given type can be created in this container.
+     * @brief canCreate(type, pytype): tests if a new object of given type can be created in this container.
      * @param type: name of type of object, like "Part::Feature"
      * @param pytype: name of python subtype (optional, free-form). It is fed
      * to GroupExtension::allowObject, which can be overridden to provide
      * allow/disallow rules for python-powered objects.
      */
-    virtual bool canAccept(const char* type, const char* pytype = "") const;
+    virtual bool canCreate(const char* type, const char* pytype = "") const;
     /**
      * @brief newObject: creates a new object in this container.
      * @param sType: class name of the object to create, e.g. "Part::Box"

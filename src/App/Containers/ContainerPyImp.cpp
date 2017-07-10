@@ -92,7 +92,7 @@ PyObject* ContainerPy::canAccept(PyObject* args)
     if (PyArg_ParseTuple(args, "s|s", &type, &typepy)){
         try {
             return Py::new_reference_to(Py::Boolean(
-                getContainerPtr()->canAccept(type, typepy ? typepy : "")   ));
+                getContainerPtr()->canCreate(type, typepy ? typepy : "")   ));
         } CONTAINERPY_STDCATCH_METH;
     }
 

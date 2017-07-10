@@ -140,7 +140,7 @@ bool Container::canAccept(DocumentObject* obj, bool b_throw) const
         } else if (isAnOrigin()) {
             throw ContainerUnsupportedError("Origin can't accept any objects");
         } else {
-            if (!this->canAccept(obj->getTypeId().getName())){
+            if (!this->canCreate(obj->getTypeId().getName())){
                 std::stringstream msg;
                 msg << "Container " << getName() << " refuses to accept objects of type " << obj->getTypeId().getName();
                 throw RejectedByContainerError(msg.str());
@@ -155,7 +155,7 @@ bool Container::canAccept(DocumentObject* obj, bool b_throw) const
     }
 }
 
-bool Container::canAccept(const char* type, const char* pytype) const
+bool Container::canCreate(const char* type, const char* pytype) const
 {
     if (isNull())
         return false;
@@ -177,7 +177,7 @@ DocumentObject* Container::newObject(const char* sType, const char* pObjectName,
     if (isADocument()){
         return asDocument().newObject(sType, pObjectName, isNew);
     } else if (isAGroup()){
-        if (!canAccept(sType, pytype) && isNew){
+        if (!canCreate(sType, pytype) && isNew){
             std::stringstream msg;
             msg << "Container " << getName() << " refuses to accept objects of type " << sType;
             if (pytype)
