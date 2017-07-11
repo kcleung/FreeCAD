@@ -1554,8 +1554,13 @@ DocumentObject* Document::addObject(const char* sType, const char* pObjectName, 
     // New code should always use App.ActiveContainer.newObject(...)
     // directly. This is only for legacy code to work.
 
-
-    return this->getActiveContainer().newObject(sType, pObjectName, "", isNew);
+    try {
+        return this->getActiveContainer().newObject(sType, pObjectName, "", isNew);
+    } catch (Exception e) {
+        // if the active container cannot accept the new object,
+        // add this object directly to Document
+        return this->newObject(sType, pObjectName, isNew);
+    }
 }
 
 bool Document::saveAs(const char* file)
