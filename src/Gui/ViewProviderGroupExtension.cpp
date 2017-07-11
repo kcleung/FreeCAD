@@ -86,7 +86,7 @@ bool ViewProviderGroupExtension::extensionCanDropObject(App::DocumentObject* obj
     if (group->hasObject(obj))
         return false;  
 
-    if (group->allowObject(obj))
+    if (group->canAccept(obj))
         return true;
 
     return false;

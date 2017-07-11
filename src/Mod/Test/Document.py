@@ -200,7 +200,7 @@ class DocumentBasicCases(unittest.TestCase):
       
     #test if the method override works
     class SpecialGroup():
-        def allowObject(self, obj):
+        def canAccept(self, obj):
             return False;
     
     callback = SpecialGroup()
@@ -406,7 +406,7 @@ class SaveRestoreSpecialGroup():
         obj.addExtension("App::GroupExtensionPython", self)
         obj.Proxy = self
         
-    def allowObject(self, obj):
+    def canAccept(self, obj):
         return False;
 
 # class must be defined in global scope to allow it to be reloaded on document open    
@@ -501,8 +501,8 @@ class DocumentSaveRestoreCases(unittest.TestCase):
     self.failUnless(Doc.Extension_1.ExtensionProxy is None)
     self.failUnless(Doc.Extension_2.ExtensionProxy is not None)
     self.failUnless(Doc.Extension_2.Group[0] is Doc.Obj)
-    self.failUnless(hasattr(Doc.Extension_2.Proxy, 'allowObject'))
-    self.failUnless(hasattr(Doc.Extension_2.ExtensionProxy, 'allowObject'))
+    self.failUnless(hasattr(Doc.Extension_2.Proxy, 'canAccept'))
+    self.failUnless(hasattr(Doc.Extension_2.ExtensionProxy, 'canAccept'))
 
     if FreeCAD.GuiUp:
       self.failUnless(Doc.Extension_2.ViewObject.hasExtension("Gui::ViewProviderGroupExtensionPython"))

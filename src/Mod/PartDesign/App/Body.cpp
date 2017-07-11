@@ -255,7 +255,7 @@ bool Body::isAllowed(const char* type, const char* /*pytype*/)
             );
 }
 
-bool Body::allowObject(const char* type, const char* pytype)
+bool Body::canCreate(const char* type, const char* pytype)
 {
     return isAllowed(type, pytype);
 }
@@ -272,7 +272,7 @@ Body* Body::findBodyOf(const App::DocumentObject* feature)
 
 std::vector<App::DocumentObject*> Body::addObject(App::DocumentObject *feature)
 {
-    if(!allowObject(feature))
+    if(!canAccept(feature))
         throw Base::Exception("Body: object is not allowed");
     
     //TODO: features should not add all links

@@ -109,8 +109,8 @@ public:
       */
     static bool isAllowed(const DocumentObject* obj);
     static bool isAllowed(const char* type, const char* pytype = "");
-    virtual bool allowObject(const char* type, const char* pytype = "") override;
-    using BodyBase::allowObject; //fixes allowObject(object) screened out by the above override.
+    virtual bool canCreate(const char* type, const char* pytype = "") override;
+    using BodyBase::canCreate; //fixes canCreate(object) screened out by the above override.
 
 
 
